@@ -1,7 +1,7 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const usersRouter = express.Router();
-const { User } = require('../models/User');
+const { User, Show } = require('../models');
 
 usersRouter.use(express.json());
 
@@ -30,6 +30,15 @@ usersRouter.get('/:id/shows', async (req, res) => {
 })
 
 usersRouter.put('/:id/shows/:showId', async (req, res) => {
+  try {
+    const show = await Show.findByPk(req.params.showId);
+    await show.update({
+      userId: req.params.id
+    });
+    res.status(200).send(`Show ${req.params.showId} successfully watched by user ${req.params.id}`);
+  } catch (erorr) {
+    res.status(404).send(error);
+  }
   
 });
 
