@@ -8,6 +8,7 @@ const db = require('./db/db');
 app.use(express.json());
 
 //Allows app to listen on given port, so it can be queried
-app.listen(port, () => {
+app.listen(port, async () => {
+  await db.sync();
   console.log(`Listening on port ${port}...`)
 });
