@@ -1,7 +1,7 @@
 //Import express package locally installed
 const express = require('express');
 const app = express();
-const port = 5000;
+const port = 3000;
 const { usersRouter, showsRouter } = require('./routes');
 const seed = require('./db/seed');
 
