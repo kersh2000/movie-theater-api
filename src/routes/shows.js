@@ -10,4 +10,15 @@ showsRouter.get('/', async (req, res) => {
   res.status(200).send(shows);
 });
 
+showsRouter.get('/:id', async (req, res) => {
+  const show = await Show.findByPk(req.params.id);
+  if (show) {
+    res.status(200).send(show);
+  } else {
+    res.status(404).send("Could not find show.");
+  }
+});
+
+
+
 module.exports = showsRouter;
