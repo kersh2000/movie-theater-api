@@ -19,6 +19,17 @@ showsRouter.get('/:id', async (req, res) => {
   }
 });
 
-
+showsRouter.get('/genres/:genre', async (req, res) => {
+  try {
+    const shows = await Show.findAll({
+      where: {
+        genre: req.params.genre
+      }
+    });
+    res.status(200).send(shows);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+});
 
 module.exports = showsRouter;
