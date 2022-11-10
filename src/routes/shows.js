@@ -32,4 +32,16 @@ showsRouter.get('/genres/:genre', async (req, res) => {
   }
 });
 
+showsRouter.put('/:id/watched', async (req, res) => {
+  try {
+    const show = await Show.findByPk(req.params.id);
+    await show.update({
+      rating: req.body.rating
+    });
+    res.status(200).send(`Show ${req.params.id} successfully updated.`);
+  } catch (error) {
+    res.status(404).send(`Could not update rating to show ${req.params.id}.`)
+  }
+});
+
 module.exports = showsRouter;
