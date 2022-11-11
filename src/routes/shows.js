@@ -49,7 +49,7 @@ async (req, res) => {
   res.status(200).send(`Show ${req.params.id} successfully updated.`);
 });
 
-showsRouter.put('/:id/updates/', validShow, async (req, res) => {
+showsRouter.put('/:id/updates', validShow, async (req, res) => {
   const arr = ['cancelled', 'on-going'];
   await req.show.update({
     status: (arr[1 - arr.indexOf(req.show.status)])
