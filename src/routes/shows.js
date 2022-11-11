@@ -1,8 +1,8 @@
 const express = require('express');
-const { body, validationResult } = require('express-validator');
 const showsRouter = express.Router();
 const { Show } = require('../models/Show');
 const validShow = require('../middleware/validShow');
+const { body, validationResult } = require('express-validator');
 
 showsRouter.use(express.json());
 
@@ -46,25 +46,18 @@ async (req, res) => {
   res.status(200).send(`Show ${req.params.id} successfully updated.`);
 });
 
-showsRouter.put('/:id/updates/:custom'
-, 
-validShow, async (req, res) => {
+showsRouter.put('/:id/updates/', validShow, async (req, res) => {
   const arr = ['cancelled', 'on-going'];
-  if (req.params.custom === 'true') {
-    await req.show.update({
-      status: (arr[1 - arr.indexOf(req.show.status)])
-    });
-    res.status(200).send(`Successfully changed status of show ${req.params.id}`);
-  } else {
-
-  }
+  await req.show.update({
+    status: (arr[1 - arr.indexOf(req.show.status)])
+  });
+  res.status(200).send(`Successfully changed status of show ${req.params.id}`);
 });
 
-showsRouter.delete('/:id', async (req, res) => {
+showsRouter.delete('/:id', validShow, async (req, res) => {
   try {
-    const show = await Show.findByPk(req.params.id);
-    await show.destroy();
-    res.status(200).send(`Show ${req.params.id} successfully deleted.`);
+    await req.show.destroy();
+    res.status(200).send(`Show ${req.show.title} successfully deleted.`);
   } catch (error) {
     res.status(404).send(`Failed to delete show ${req.params.id}.`);
   }
