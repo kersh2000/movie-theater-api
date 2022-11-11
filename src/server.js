@@ -10,6 +10,11 @@ app.use(express.json());
 app.use('/users', usersRouter);
 app.use('/shows', showsRouter);
 
+app.get('/seed', async(req, res) => {
+  await seed();
+  res.status(200).send('Database has been re-populated.');
+});
+
 //Allows app to listen on given port, so it can be queried
 app.listen(port, async () => {
   await seed();
