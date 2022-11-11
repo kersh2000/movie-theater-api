@@ -16,7 +16,7 @@ showsRouter.get('/:id', validShow, async (req, res) => {
   res.status(200).send(req.show);
 });
 
-showsRouter.get('/genres/:genre', validGenre, async (req, res) => {
+showsRouter.get('/genres/:genre', async (req, res) => {
   const genre = req.params.genre;
   const shows = await Show.findAll({
     where: {
