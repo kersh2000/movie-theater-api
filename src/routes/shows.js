@@ -3,6 +3,7 @@ const showsRouter = express.Router();
 const { Show } = require('../models/Show');
 const validShow = require('../middleware/validShow');
 const { body, validationResult } = require('express-validator');
+const findGenre = require('../findGenre');
 
 showsRouter.use(express.json());
 
@@ -15,22 +16,24 @@ showsRouter.get('/:id', validShow, async (req, res) => {
   res.status(200).send(req.show);
 });
 
-showsRouter.get('/genres/:genre', async (req, res) => {
-  try {
-    const shows = await Show.findAll({
-      where: {
-        genre: req.params.genre
-      }
-    });
+showsRouter.get('/genres/:genre', validGenre, async (req, res) => {
+  const genre = req.params.genre;
+  const shows = await Show.findAll({
+    where: {
+      genre: genre
+    }
+  });
+  if (shows.length === 0) {
+    const match = await findGenre(genre)
+    res.status(404).send(`Genre ${genre} cannot be found.\n${match}`);
+  } else {
     res.status(200).send(shows);
-  } catch (error) {
-    res.status(404).send(error);
   }
 });
 
 showsRouter.put('/:id/watched',
 body('rating')
-.not().isEmpty()
+.notEmpty()
 .withMessage('Rating must be provided.')
 .custom(value => !/\s/.test(value))
 .withMessage('Rating must not conatin any spaces.'),
@@ -38,7 +41,7 @@ validShow,
 async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(401).send(errors);
+    return res.status(401).send(errors);
   }
   await req.show.update({
     rating: req.body.rating
