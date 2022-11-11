@@ -17,6 +17,5 @@ app.get('/seed', async(req, res) => {
 
 //Allows app to listen on given port, so it can be queried
 app.listen(port, async () => {
-  await seed();
   console.log(`Listening on port ${port}...`)
 });
